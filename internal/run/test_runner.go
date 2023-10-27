@@ -133,7 +133,7 @@ func (r *Run) teardownActiveScenario() {
 		r.fail("teardown failed")
 	}
 	r.pushMetrics()
-	fmt.Println(r.result.Teardown())
+	// fmt.Println(r.result.Teardown())
 }
 
 func (r *Run) configureLogging() {
