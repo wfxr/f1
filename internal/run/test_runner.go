@@ -88,6 +88,7 @@ Running {yellow}{{.Options.Scenario}}{-} scenario for {{if .Options.MaxIteration
 
 func (r *Run) Do(s *scenarios.Scenarios) *RunResult {
 	fmt.Print(renderTemplate(startTemplate, r))
+	fmt.Println()
 	defer r.printSummary()
 	defer r.printLogOnFailure()
 
@@ -141,7 +142,7 @@ func (r *Run) configureLogging() {
 		r.result.LogFile = redirectLoggingToFile(r.Options.Scenario)
 		welcomeMessage := renderTemplate(startTemplate, r)
 		log.Info(welcomeMessage)
-		fmt.Printf("Saving logs to %s\n\n", r.result.LogFile)
+		// fmt.Printf("Saving logs to %s\n\n", r.result.LogFile)
 	}
 }
 

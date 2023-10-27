@@ -134,14 +134,26 @@ var (
 {{- end}}
 {{.IterationsStarted}} iterations started in {{duration .Duration}} ({{rate .Duration .IterationsStarted}}/second)
 {{- if .SuccessfulIterationCount}}
-{bold}Successful Iterations:{-} {green}{{.SuccessfulIterationCount}} ({{percent .SuccessfulIterationCount .Iterations | printf "%0.2f"}}%%, {{rate .Duration .SuccessfulIterationCount}}/second){-} {{.SuccessfulIterationDurations.String}}
+
+{bold}Successful Iterations:{-}
+    {green}{{.SuccessfulIterationCount}} ({{percent .SuccessfulIterationCount .Iterations | printf "%0.2f"}}%%, {{rate .Duration .SuccessfulIterationCount}}/second){-}
+
+{bold}Successful Percentage:{-} {{.SuccessfulIterationDurations.String 4}}
 {{- end}}
 {{- if .FailedIterationCount}}
-{bold}Failed Iterations:{-} {red}{{.FailedIterationCount}} ({{percent .FailedIterationCount .Iterations | printf "%0.2f"}}%%, {{rate .Duration .FailedIterationCount}}){-} {{.FailedIterationDurations.String}}
+
+{bold}Failed Iterations:{-}
+    {red}{{.FailedIterationCount}} ({{percent .FailedIterationCount .Iterations | printf "%0.2f"}}%%, {{rate .Duration .FailedIterationCount}}){-}
+
+{bold}Failed Percentage:{-} {{.FailedIterationDurations.String 4}}
 {{- end}}
 {{- if .DroppedIterationCount}}
+
 {bold}Dropped Iterations:{-} {yellow}{{.DroppedIterationCount}} ({{percent .DroppedIterationCount .Iterations | printf "%0.2f"}}%%, {{rate .Duration .DroppedIterationCount}}){-} (consider increasing --concurrency setting)
 {{- end}}
+
+{yellow}{u}{bold}Full Logs{-}
+    {{.LogFile}}
 `))
 	setup = template.Must(template.New("setup").
 		Funcs(templateFunctions).
@@ -149,20 +161,20 @@ var (
 
 	progress = template.Must(template.New("result parse").
 			Funcs(templateFunctions).
-			Parse(`{cyan}[{{durationSeconds .Duration | printf "%5s"}}]{-}  {green}✔ {{printf "%5d" .SuccessfulIterationCount}}{-}  {{if .DroppedIterationCount}}{yellow}⦸ {{printf "%5d" .DroppedIterationCount}}{-}  {{end}}{red}✘ {{printf "%5d" .FailedIterationCount}}{-} {light_black}({{rate .RecentDuration .RecentSuccessfulIterations}}/s){-}
-{{- with .SuccessfulIterationDurations}}   p(50): {{.Get 0.5}},  p(95): {{.Get 0.95}}, p(100): {{.Get 1.0}}{{end}}`))
+			Parse(`{cyan}[{{durationSeconds .Duration 0.1 | printf "%6s"}}]{-}  {green}✔ {{printf "%5d" .SuccessfulIterationCount}}{-}  {{if .DroppedIterationCount}}{yellow}⦸ {{printf "%5d" .DroppedIterationCount}}{-}  {{end}}{red}✘ {{printf "%5d" .FailedIterationCount}}{-} {light_black}({{rate .RecentDuration .RecentSuccessfulIterations}}/s){-}
+{{- with .SuccessfulIterationDurations}}   p50: {{.Get 0.5}},  p95: {{.Get 0.95}}, p99: {{.Get 0.99}}, p100: {{.Get 1.0}}{{end}}`))
 	teardown = template.Must(template.New("teardown").
 			Funcs(templateFunctions).
 			Parse(`{cyan}[Teardown]{-} {{if .Error}}{red}✘ {{.Error}}{-}{{else}}{green}✔{-}{{end}}`))
 	timeout = template.Must(template.New("timeout").
 		Funcs(templateFunctions).
-		Parse(`{cyan}[{{durationSeconds .Duration | printf "%5s"}}]  Max Duration Elapsed - waiting for active tests to complete{-}`))
+		Parse(`{cyan}[{{durationSeconds .Duration 0.01 | printf "%6s"}}]  Max Duration Elapsed - waiting for active tests to complete{-}`))
 	maxIterationsReached = template.Must(template.New("maxIterationsReached").
 				Funcs(templateFunctions).
-				Parse(`{cyan}[{{durationSeconds .Duration | printf "%5s"}}]  Max Iterations Reached - waiting for active tests to complete{-}`))
+				Parse(`{cyan}[{{durationSeconds .Duration 0.01 | printf "%6s"}}]  Max Iterations Reached - waiting for active tests to complete{-}`))
 	interrupt = template.Must(template.New("interrupt").
 			Funcs(templateFunctions).
-			Parse(`{cyan}[{{durationSeconds .Duration | printf "%5s"}}]  Interrupted - waiting for active tests to complete{-}`))
+			Parse(`{cyan}[{{durationSeconds .Duration 0.1 | printf "%6s"}}]  Interrupted - waiting for active tests to complete{-}`))
 )
 
 func (r *RunResult) String() string {

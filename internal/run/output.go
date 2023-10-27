@@ -17,8 +17,8 @@ var (
 		"rate": func(duration time.Duration, count uint64) uint64 {
 			return uint64(float64(count) / duration.Seconds())
 		},
-		"durationSeconds": func(t time.Duration) time.Duration {
-			return t.Round(time.Millisecond)
+		"durationSeconds": func(t time.Duration, precision float64) time.Duration {
+			return t.Round(time.Duration(precision * float64(time.Second)))
 		},
 		"duration": func(t time.Duration) string {
 			return durafmt.Parse(t).String()
