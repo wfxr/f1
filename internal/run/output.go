@@ -15,13 +15,10 @@ var (
 			return i + j
 		},
 		"rate": func(duration time.Duration, count uint64) uint64 {
-			if uint64(duration/time.Second) == 0 {
-				return 0
-			}
-			return count / uint64(duration/time.Second)
+			return uint64(float64(count) / duration.Seconds())
 		},
 		"durationSeconds": func(t time.Duration) time.Duration {
-			return t.Round(time.Second)
+			return t.Round(time.Millisecond)
 		},
 		"duration": func(t time.Duration) string {
 			return durafmt.Parse(t).String()
