@@ -2,7 +2,6 @@ package run
 
 import (
 	"fmt"
-	"sort"
 	"strings"
 	"time"
 )
@@ -10,16 +9,12 @@ import (
 type DurationPercentileMap map[float64]time.Duration
 
 func (m *DurationPercentileMap) String(indent int) string {
-	s := ""
-	keys := make([]float64, 0, len(*m))
-	for k := range *m {
-		keys = append(keys, k)
+	var s string
+	for _, pc := range []float64{0.5, 0.75, 0.9, 0.95, 0.99, 1.0} {
+		p := fmt.Sprintf("p%.0f", pc * 100)
+		s += strings.Repeat(" ", indent) + fmt.Sprintf("%4s: %s\n", p, m.Get(pc))
 	}
-	sort.Float64s(keys)
-	for _, percentile := range keys {
-		p := fmt.Sprintf("p%.0f", percentile*100)
-		s = fmt.Sprintf("%s\n%s%4s: %.1fms", s, strings.Repeat(" ", indent), p, (*m)[percentile].Seconds()*1000)
-	}
+
 	return s
 }
 

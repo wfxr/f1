@@ -138,14 +138,16 @@ var (
 {bold}Successful Iterations:{-}
     {green}{{.SuccessfulIterationCount}} ({{percent .SuccessfulIterationCount .Iterations | printf "%0.2f"}}%%, {{rate .Duration .SuccessfulIterationCount}}/second){-}
 
-{bold}Successful Percentage:{-} {{.SuccessfulIterationDurations.String 4}}
+{bold}Successful Percentage:{-}
+{{.SuccessfulIterationDurations.String 4}}
 {{- end}}
 {{- if .FailedIterationCount}}
 
 {bold}Failed Iterations:{-}
     {red}{{.FailedIterationCount}} ({{percent .FailedIterationCount .Iterations | printf "%0.2f"}}%%, {{rate .Duration .FailedIterationCount}}){-}
 
-{bold}Failed Percentage:{-} {{.FailedIterationDurations.String 4}}
+{bold}Failed Percentage:{-}
+{{.FailedIterationDurations.String 4}}
 {{- end}}
 {{- if .DroppedIterationCount}}
 
