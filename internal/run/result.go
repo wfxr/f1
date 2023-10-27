@@ -142,7 +142,6 @@ var (
 {{- if .DroppedIterationCount}}
 {bold}Dropped Iterations:{-} {yellow}{{.DroppedIterationCount}} ({{percent .DroppedIterationCount .Iterations | printf "%0.2f"}}%%, {{rate .Duration .DroppedIterationCount}}){-} (consider increasing --concurrency setting)
 {{- end}}
-{bold}Full logs:{-} {{.LogFile}}
 `))
 	setup = template.Must(template.New("setup").
 		Funcs(templateFunctions).

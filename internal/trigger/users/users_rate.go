@@ -23,7 +23,7 @@ func UsersRate() api.Builder {
 
 			return &api.Trigger{
 					Trigger:     trigger,
-					Description: "Makes requests from a set of users specified by --concurrency",
+					Description: "unlimit",
 					// The rate function used by the `users` mode, is actually dependent
 					// on the number of users specified in the `--concurrency` flag.
 					// This flag is not required for the `chart` command, which uses the `DryRun`
