@@ -159,15 +159,15 @@ var (
 `))
 	setup = template.Must(template.New("setup").
 		Funcs(templateFunctions).
-		Parse(`{cyan}[Setup]{-}    {{if .Error}}{red}✘ {{.Error}}{-}{{else}}{green}✔{-}{{end}}`))
+		Parse(`{cyan}[Setup]{-}    {{if .Error}}{red}Failed {{.Error}}{-}{{else}}{green}Succeeded{-}{{end}}`))
 
 	progress = template.Must(template.New("result parse").
 			Funcs(templateFunctions).
-			Parse(`{cyan}[{{durationSeconds .Duration 0.1 | printf "%6s"}}]{-}  {green}✔ {{printf "%5d" .SuccessfulIterationCount}}{-}  {{if .DroppedIterationCount}}{yellow}⦸ {{printf "%5d" .DroppedIterationCount}}{-}  {{end}}{red}✘ {{printf "%5d" .FailedIterationCount}}{-} {light_black}({{rate .RecentDuration .RecentSuccessfulIterations}}/s){-}
+			Parse(`{cyan}[{{durationSeconds .Duration 0.1 | printf "%6s"}}]{-}  {green}Passed {{printf "%5d" .SuccessfulIterationCount}}{-}  {{if .DroppedIterationCount}}{yellow}Dropped {{printf "%5d" .DroppedIterationCount}}{-}  {{end}}{red}Failed {{printf "%5d" .FailedIterationCount}}{-} {light_black}({{rate .RecentDuration .RecentSuccessfulIterations}}/s){-}
 {{- with .SuccessfulIterationDurations}}   p50: {{.Get 0.5}},  p95: {{.Get 0.95}}, p99: {{.Get 0.99}}, p100: {{.Get 1.0}}{{end}}`))
 	teardown = template.Must(template.New("teardown").
 			Funcs(templateFunctions).
-			Parse(`{cyan}[Teardown]{-} {{if .Error}}{red}✘ {{.Error}}{-}{{else}}{green}✔{-}{{end}}`))
+			Parse(`{cyan}[Teardown]{-} {{if .Error}}{red}Failed {{.Error}}{-}{{else}}{green}Succeeded{-}{{end}}`))
 	timeout = template.Must(template.New("timeout").
 		Funcs(templateFunctions).
 		Parse(`{cyan}[{{durationSeconds .Duration 0.01 | printf "%6s"}}]  Max Duration Elapsed - waiting for active tests to complete{-}`))
