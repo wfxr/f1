@@ -1,6 +1,7 @@
 package main
 
 import (
+	"math/rand"
 	"time"
 
 	"github.com/form3tech-oss/f1/v2/pkg/f1"
@@ -24,6 +25,11 @@ func setupMySuperFastLoadTest(t *testing.T) testing.RunFn {
 	
 	runFn := func(t *testing.T) {
 	    // fmt.Println("Run the test")
+
+		if rand.Float32() < 0.2 {
+			t.FailNow()
+		}
+
 		time.Sleep(15 * time.Millisecond)
 
 		// Register clean up function for each test which will be invoked in LIFO order after each iteration 

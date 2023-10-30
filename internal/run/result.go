@@ -144,7 +144,7 @@ var (
 {{- if .FailedIterationCount}}
 
 {bold}Failed Iterations:{-}
-    {red}{{.FailedIterationCount}} ({{percent .FailedIterationCount .Iterations | printf "%0.2f"}}%%, {{rate .Duration .FailedIterationCount}}){-}
+    {red}{{.FailedIterationCount}} ({{percent .FailedIterationCount .Iterations | printf "%0.2f"}}%%, {{rate .Duration .FailedIterationCount}}/second){-}
 
 {bold}Failed Percentage:{-}
 {{.FailedIterationDurations.String 4}}
@@ -163,8 +163,7 @@ var (
 
 	progress = template.Must(template.New("result parse").
 			Funcs(templateFunctions).
-			Parse(`{cyan}[{{durationSeconds .Duration 0.1 | printf "%6s"}}]{-}  {green}Passed {{printf "%5d" .SuccessfulIterationCount}}{-}  {{if .DroppedIterationCount}}{yellow}Dropped {{printf "%5d" .DroppedIterationCount}}{-}  {{end}}{red}Failed {{printf "%5d" .FailedIterationCount}}{-} {light_black}({{rate .RecentDuration .RecentSuccessfulIterations}}/s){-}
-{{- with .SuccessfulIterationDurations}}   p50: {{.Get 0.5}},  p95: {{.Get 0.95}}, p99: {{.Get 0.99}}, p100: {{.Get 1.0}}{{end}}`))
+		Parse(`{cyan}[{{durationSeconds .Duration 0.1 | printf "%6s"}}]{-}  QPS: {{rate .RecentDuration .RecentSuccessfulIterations}}/s  {{with .SuccessfulIterationDurations}}p50: {{.Get 0.5}}  p95: {{.Get 0.95}}  p99: {{.Get 0.99}}  p100: {{.Get 1.0}}{{end}}  {green}Passed: {{printf "%d" .SuccessfulIterationCount}}{-}{{if .DroppedIterationCount}}{yellow}  Dropped: {{printf "%d" .DroppedIterationCount}}{-}{{end}}{{if .FailedIterationCount}}{red}  Failed: {{printf "%d" .FailedIterationCount}}{{end}}{-}`))
 	teardown = template.Must(template.New("teardown").
 			Funcs(templateFunctions).
 			Parse(`{cyan}[Teardown]{-} {{if .Error}}{red}Failed {{.Error}}{-}{{else}}{green}Succeeded{-}{{end}}`))
